@@ -12,7 +12,7 @@ class surv:
         self.target_folder = target_folder
         self.faces = target_folder + 'faces/'    # Own folder for detected faces
 
-    def get_fromFTP(self):
+    def fetch_FTP(self):
 
         ''' Pictures from IP camera
             are saved on a local FTP;
@@ -26,12 +26,29 @@ class surv:
         ftp.connect(self._ftp)
         ftp.login(self._user, self._pwd)
         ftp.cwd(self._path)
+        
         files = ftp.nlst()
 
-        for f in files:
-            print(f)
-            ftp.retrbinary('RETR %s' %f , open(self.target_folder + f, 'wb').write)
-        ftp.quit()
+        def fetch(files):
+
+            ''' Process to fetch
+                is just started if 
+                directory is not
+                empty;
+            '''
+    
+            for f in files:
+                ftp.retrbinary('RETR %s' %f , open(self.target_folder + f, 'wb').write)
+
+                # Deleting pictures from ftp server when finished
+                #ftp.delete(f)
+            print('[+] All files fetched.\n')
+
+        # Define when to fetch files
+        if len(files) > 0:
+            fetch(files)
+        else:
+            pass
 
         return
 
@@ -43,8 +60,11 @@ class surv:
             an own folder:
             self.faces -> ./faces/;
         '''
-        
+        cv2.useOptimized()
+
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
+
+        print('[+] Starting detection.\n')
 
         # Iterating through all pictures in directory and perform face detection
         for root, dirs, files in os.walk(self.target_folder):
@@ -64,5 +84,6 @@ class surv:
 
                 # Saving detected faces in own folder
                 cv2.imwrite(self.faces + fname, img)
+        print('[+] Detected pictures saved.\n')
         return
 
