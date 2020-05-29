@@ -61,7 +61,6 @@ class surv:
         ftp.cwd(self._detect)
 
         for f in os.listdir(self.faces):
-            print(f)
             ff = open(self.faces + f, 'rb')
             ftp.storbinary('STOR %s' %f, ff)
         print('[+] Detection pictures uploaded to FTP successfully.\n')
@@ -100,8 +99,9 @@ class surv:
 
                 # Saving detected faces in own folder
                     crop_face = img[y:y+h, x:x+w]
+                    cv2.imwrite(self.faces + '/crop/' + fname, crop_face)
 
                 cv2.imwrite(self.faces + fname, img)
-                cv2.imwrite(self.faces + '/crop/' + fname, crop_face)
+                
         print('[+] Detected pictures saved.\n')
         return
