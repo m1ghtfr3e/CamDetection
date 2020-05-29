@@ -27,7 +27,7 @@ def upFTP(obj):
     upl = Thread(target=obj.upload_FTP)
     upl.daemon = True
     upl.start()
-    upl.daemon()
+    upl.join()
 
     return
 
