@@ -11,7 +11,7 @@ class surv:
         self._pwd = pwd
         self.target_folder = target_folder
         self.faces = target_folder + 'faces/'    # Own folder for detected faces
-        self._detect = '20200528/detect'
+        self._detect = '20200529/detect'
 
     def fetch_FTP(self):
 
@@ -99,6 +99,9 @@ class surv:
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 # Saving detected faces in own folder
+                    crop_face = img[y:y+h, x:x+w]
+
                 cv2.imwrite(self.faces + fname, img)
+                cv2.imwrite(self.faces + '/crop/' + fname, crop_face)
         print('[+] Detected pictures saved.\n')
         return
