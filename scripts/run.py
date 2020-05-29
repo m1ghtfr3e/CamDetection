@@ -1,26 +1,52 @@
+import time
 from surver import surv
 from threading import Thread
 
-def main():
-    ip = # { Adress of FTP server }
-    img_folder = # { Directory where to store the pictures }
-    user = #  { Username of FTP server }
-    pwd = # { Password of FTP server }
-    s = surv(ip, img_folder, user, pwd)
 
-    # Getting the pictures
-    p1 = Thread(target=s.get_fromFTP())
-    # Detecting faces on pictures
-    p2 = Thread(target=s.detect_faces())
+def getFTP(obj):
 
+    fetch = Thread(target=obj.fetch_FTP())
+    fetch.daemon = True
+    fetch.start()
+    fetch.join()
+    
+    return
 
-    p1.start()
-    p2.start()
+def detect(obj):
 
-    p1.join()
-    p2.join()
+    det = Thread(target=obj.detect_faces())
+    det.daemon = True
+    det.start()
+    det.join()
+
+    return
+
+def main(obj):
+
+    try:
+
+        while True:
+            getFTP(obj)
+            detect(obj)
+            print('[+] Waiting for 300 sec now.\n')
+            time.sleep(300)
+    except Exception:
+        raise Exception
+
+    except KeyboardInterrupt:
+        print('[!] Program manually stopped.\n')
+
+    return
 
 
 if __name__ == '__main__':
 
-    main()
+    ip = # IP of FTP
+    img_folder = # Where to save the pictures
+    user = # User of FTP
+    pwd = # Password of FTP
+
+    S = surv(ip, img_folder, user, pwd)
+
+    # Giving the class object as parameter to func
+    main(S)
