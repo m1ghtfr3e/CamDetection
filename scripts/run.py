@@ -21,18 +21,27 @@ def detect(obj):
 
     return
 
+def upFTP(obj):
+
+    upl = Thread(target=obj.upload_FTP)
+    upl.daemon = True
+    upl.start()
+    upl.daemon()
+
+    return
+
 def main(obj):
 
     try:
 
         while True:
-            
             getFTP(obj)
             detect(obj)
-            
+            upFTP(obj)
+
             print('[+] Waiting for 300 sec now.\n')
             time.sleep(300)
-            
+
     except Exception:
         raise Exception
 
