@@ -11,6 +11,7 @@ class surv:
         self._pwd = pwd
         self.target_folder = target_folder
         self.faces = target_folder + 'faces/'    # Own folder for detected faces
+        self._detect = '20200528/detect'
 
     def fetch_FTP(self):
 
@@ -42,13 +43,28 @@ class surv:
 
                 # Deleting pictures from ftp server when finished
                 ftp.delete(f)
-            print('[+] All files fetched.\n')
+            print('[+] All files fetched and deleted.\n')
 
         # Define when to fetch files
         if len(files) > 0:
             fetch(files)
         else:
             pass
+
+        return
+
+    def upload_FTP(self):
+
+        ftp = ftplib.FTP()
+        ftp.connect(self._ftp)
+        ftp.login(self._user, self._pwd)
+        ftp.cwd(self._detect)
+
+        for f in os.listdir(self.faces):
+            print(f)
+            ff = open(self.faces + f, 'rb')
+            ftp.storbinary('STOR %s' %f, ff)
+        print('[+] Detection pictures uploaded to FTP successfully.\n')
 
         return
 
@@ -86,4 +102,3 @@ class surv:
                 cv2.imwrite(self.faces + fname, img)
         print('[+] Detected pictures saved.\n')
         return
-
