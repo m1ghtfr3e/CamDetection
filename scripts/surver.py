@@ -41,7 +41,7 @@ class surv:
                 ftp.retrbinary('RETR %s' %f , open(self.target_folder + f, 'wb').write)
 
                 # Deleting pictures from ftp server when finished
-                #ftp.delete(f)
+                ftp.delete(f)
             print('[+] All files fetched.\n')
 
         # Define when to fetch files
