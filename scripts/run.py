@@ -26,10 +26,13 @@ def main(obj):
     try:
 
         while True:
+            
             getFTP(obj)
             detect(obj)
+            
             print('[+] Waiting for 300 sec now.\n')
             time.sleep(300)
+            
     except Exception:
         raise Exception
 
